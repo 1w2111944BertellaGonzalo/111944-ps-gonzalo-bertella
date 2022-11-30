@@ -1,0 +1,68 @@
+{% extends 'base/main.html' %} {% block content %}
+
+
+<div class="container">
+    <div class="row mt-5">
+        <div class="col">
+            <div class="row ">
+                <div class="col-lg-8 col-md-8 ">
+                {% if rol == "Gerente" %}
+                    <h2>Gerentes</h2>
+                {% else %}
+                    <h2>Encargados</h2>
+                {% endif %}
+                </div>
+                    <a class="btn btn-outline-success my-2 my-sm-0" href="{% url 'registrar' rol %}" >Registrar {{rol}}</a>                
+            </div>
+
+            <table id="tabla_usuarios" class="table table-hover table-dark">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">mail</th>
+                        <th scope="col">Dirección</th>
+                        <th scope="col">Teléfono</th>
+                        <th scope="col">Fecha Nacimiento</th>
+                        {%if rol == "Encargado" %}
+                        <th scope="col">Local</th>
+                        {% endif %}
+                        <th scope="col">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for usuario in usuarios %}
+                    <tr>
+                        <th scope="row">{{forloop.counter}}</th>
+                        <td>{{ usuario.nombre }}</td>
+                        <td>{{ usuario.mail }}</td>
+                        <td>{{ usuario.direccion }}</td>
+                        <td>{{ usuario.telefono }}</td>
+                        <td>{{ usuario.fecha_nacimiento }}</td>
+                        {%if rol == "Encargado" %}
+                        <td>{% for local in usuario.local_set.all %} {{ local }}  {% endfor %}</td>
+                        {% endif %}
+                        <td><button><a href="{% url 'eliminar-usuario' usuario.id %}">Eliminar</a></button>
+                            <button><a href="{% url 'editar-usuario' usuario.id %}">Editar </a></button></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block script %}
+    <script>
+    // Initialising DataTables
+    $(document).ready(function () {
+        $('#tabla_usuarios').DataTable();
+        // $('#tabla_retiros').DataTable();
+
+    });
+    </script>
+
+
+{% endblock script %}

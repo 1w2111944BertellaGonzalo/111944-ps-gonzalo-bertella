@@ -1,0 +1,117 @@
+{% extends 'base/main.html' %}{% block content %}
+{% load static %}
+{% include 'base/navbar.html' %}
+
+<div class="container" >
+
+    <h1 class="text-center" style="margin-top: 100px " >Reporte de Horarios trabajados vs Horarios asignados</h1>
+    <br>
+        <h2>Empleado : {{empleado}}</h1>
+        <div class="row">
+        <h4 class="col-12" id="total_horas_asignadas">Total de horas asignadas en la semana: {{suma_horas_asignadas}}</h4>
+        <h4 class="col-12" id="total_horas_trabajadas">Total de horas trabajadas en la semana: {{suma_horas_trabajadas}}</h4>
+        </div>
+    <div class="row pt-2">
+        <div class="col-md-6 d-flex justify-content-start">
+        <select id="lista_semanas" name="lista_semanas" class=" mt-auto form-select form-control" required aria-label="multiple select example">
+            <option disabled value=0>Seleccione</option>
+        {% for fecha, values in semanas_con_horarios_asignados.items %}
+            <option value="{{values.semana}}, {{values.year}}">{{fecha}}</option>                
+        {% endfor %}
+        </select>
+        </div>
+        <div class="col-md-6 justify-content-end">
+            <button onclick="actualizarChartHorarios()" class="mt-auto align-self-center btn btn-primary">Filtrar</button>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="chart-area" style="width: 100%; padding-top: 10px ;  padding-bottom: 20px; background: linear-gradient( rgba(200, 130, 20, 0.1), rgba(192, 67, 32, 0.7));" id="Section1">
+                <canvas id="chartHorarios"></canvas>
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+{% endblock %}
+
+{% block script %}
+
+<script>
+    const ctx = document.getElementById('chartHorarios');
+    const lista_total_horas_asignadas = {{lista_total_horas_asignadas|safe}}
+    const lista_total_horas_trabajadas = {{lista_total_horas_trabajadas|safe}}
+
+    let labels = {{dias|safe}}
+
+    horariosChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: labels,
+        datasets: [{
+        label: 'Horas Asignadas',
+        data: lista_total_horas_asignadas,
+        borderWidth: 1
+        },{
+        label: 'Horas Trabajadas',
+        data: lista_total_horas_trabajadas,
+        borderWidth: 1,
+        }]
+    },
+    options: {
+        maintainAspectRatio: false,
+        responsive: true,
+        scales: {
+        y: {
+            beginAtZero: true
+        }
+        }
+    }
+    });
+
+</script>
+
+
+<script>
+  lista_semanas = document.getElementById('lista_semanas')
+
+  total_horas_asignadas = document.getElementById('total_horas_asignadas')
+  total_horas_trabajadas = document.getElementById('total_horas_trabajadas')
+
+
+  function actualizarChartHorarios() {
+      let result
+      try {
+          result = $.ajax({
+          type: 'GET',
+          url: "{% url 'actualizar-reporte-horarios' %}",
+          data: {'semana_year': lista_semanas.value, 'empleado_id': {{empleado.id}}},
+          success: function (response) {
+
+            total_horas_asignadas.innerText = "Total de horas asignadas en la semana:  " + response.suma_horas_asignadas
+            total_horas_trabajadas.innerText = "Total de horas trabajadas en la semana: " + response.suma_horas_trabajadas
+
+            let labels = response.dias
+            horariosChart.data.labels = labels
+            horariosChart.data.datasets[0].data = response.lista_total_horas_asignadas
+            horariosChart.data.datasets[1].data = response.lista_total_horas_trabajadas
+            horariosChart.update()
+          },
+          error: function (response) {
+            console.log("error")
+            console.log(response)
+        }
+        });
+      }
+      catch (error) {
+        console.error(error)
+        }
+
+  }
+</script>
+
+
+{% endblock %}
+

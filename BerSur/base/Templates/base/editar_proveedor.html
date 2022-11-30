@@ -1,0 +1,38 @@
+{% extends 'base/main.html' %} {% block content %}
+
+<div class="container text-center mt-5">
+    <h1>Editar Proveedor</h1>
+    <div id="Section1">
+    <form method="post">
+        {% csrf_token %}
+        <input type="text" name="local_id" hidden value="{{local.id}}"> 
+        <div class="container">
+        <div class="row py-3">
+                <div class="col-6">
+                    <div class="form-group">
+                        {{form.nombre}}
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        {{form.mail}}
+                    </div>
+                </div>
+            </div>
+            <div class="row py-3">
+                <div class="col-6">
+                    {{form.telefono}}
+                </div>
+                <div class="col-6">
+                    {{form.direccion}}
+                </div>
+            </div>
+            <div class="row py-3">
+                <button class="btn btn-secondary btn-block"> Editar </button>
+            </div>
+        </div>
+    </form>
+</div>
+</div>
+
+{% endblock %}

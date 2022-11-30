@@ -1,0 +1,35 @@
+{% extends 'base/main.html' %} {% block content %}
+{% include 'base/navbar.html' %}
+
+<div class="container text-center mt-5">
+<h1 style="margin-top: 70px;" >Agregar Proveedor</h1>
+    <form method="post" id="Section2">
+        {% csrf_token %}
+
+        
+                    <div class="row py-3">
+                        <div class="col-lg-6 col-md-6">
+                            <input id="txtNombre" name="nombre" class="form-control" type="text" placeholder="Nombre">
+                        </div>
+                        <div class="col-lg-6 col-md-6">
+                            <input id="txtMail" name="mail" class="form-control" type="text" placeholder="Mail">
+                        </div>
+                    </div>
+                    <div class="row py-3">
+                        <div class="col-lg-6 col-md-6">
+                            <input id="txtTeléfono" name="telefono" class="form-control" type="text" placeholder="Teléfono">
+                        </div>
+                        <div class="col-lg-6 col-md-6">
+                            <input id="txtDireccion" name="direccion" class="form-control" type="text" placeholder="Dirección">
+                        </div>
+                    </div>
+                    <div class="row ">
+                        <div class="col-12 py-3">
+                            <button class="btn btn-block boton" id="btnAgregar"> Agregar Proveedor</button>
+                        </div>
+                    </div>
+    </form>
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,160 @@
+
+{% extends 'base/main.html' %} {% block content %}
+{% load static %}
+
+<style>
+        #body_login {
+            background: #121211;
+            background: linear-gradient(to right, #3E3E3E, #121211);
+        }
+        
+        .login_bg {
+            background-image: url({% static 'images/bersurlogo.png' %} );
+            background-position: center center;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position-x: center;
+            background-position-y: center;
+            background-color: #000000;
+        }
+</style>
+
+<div id=body_login>
+    <div class="container w-75 bg-primary rounded shadow">
+        <div class="row align-items-stretch">
+            <div class="col login_bg d-none d-lg-block col-md-5 col-lg-5 col-xl-6 rounded">
+
+            </div>
+            <div class="col bg-white p-5 rounded-end ">
+                <div class="text-end">
+                    <img src="img/logo.png" with="48" alt="">
+                </div>
+
+                <h2 class="fw-bold text-center py-5">
+                    Bienvenido
+                </h2>
+
+                <!--  LOGIN-->
+
+                <form action="" method="POST" autocomplete="off">
+                    {% csrf_token %}
+                    <div class="mb-4">
+                        <label for="email"  class="form-label">Correo Electronico</label>
+                        <input class="form-control" autocomplete="false" name="email" type="email" placeholder="Email" aria-label="Email">
+                    </div>
+                    <div class="mb-4">
+                        <label for="password" class="form-label">Contraseña</label>
+                        <input class="form-control" name="password" type="password" placeholder="Contraseña" aria-label="Contraseña">
+                    </div>
+                    <div class="mb-4 form-check">
+                        <input type="checkbox" name="connected" class="form-check-input">
+                        <label for="connected" class="form-check-label">Mantenerme conectado</label>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn-secondary btn-lg btn-block">Iniciar Sesión</button>
+                    </div>
+
+                    <div class="my-3">
+                        <span>  
+                        
+                            <!-- Button trigger modal -->
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                                Terminos y Condiciones
+                                </button>
+
+                                <!-- Modal -->
+                                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Terminos Y Condiciones</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form>
+                                                <h6>Bienvenido a Ber-Sur Management</h6>
+                                                <p>De acuerdo a nuestra política de Términos y Condiciones, toda persona que acceda a utilizar
+                                                    nuestra plataforma
+                                                    y utilizar el servicio, deberá aceptarlos si así desease continuar con el proceso de registro.
+                                                    Si no está de acuerdo con los Términos y Condiciones o la Política de Privacidad, no utilice el
+                                                    servicio.
+                                                    El usuario manifiesta haber leído, entendido y aceptado los presentes Términos y Condiciones de
+                                                    Uso, puestos a su disposición, en todo momento.</p>
+                                                <hr>
+                                                <h6>Utilización de la plataforma y servicios</h6>
+                                                <p>El usuario reconoce y acepta voluntariamente que el uso de los servicios y contenidos que se
+                                                    ofrecen en la plataforma de Ber-Sur Management,
+                                                    queda bajo su única y exclusiva responsabilidad. El usuario de la plataforma libera a Ber-Sur Management,
+                                                    sus directivos, empleados y
+                                                    personal vinculado, de cualquier responsabilidad. Así mismo, acepta y entiende que Ber-Sur Management, no
+                                                    otorga garantía alguna,
+                                                    de ningún tipo, explícita o implicíta.</p>
+                                                <hr>
+                                                <h6>Propiedad intelectual</h6>
+                                                <p>El software en Argentina está protegido por la ley 11.723, que regula la propiedad intelectual y
+                                                    los derechos de autor de todos aquellos
+                                                    creadores de obras artísticas, literarias y científicas.</p>
+                                                <hr>
+                                                <h6>Privacidad de la información</h6>
+                                                <p>Para utilizar los servicios ofrecidos por Ber-Sur Management, los usuarios deberán facilitar determinados
+                                                    datos de carácter personal.
+                                                    Su información personal se procesa y almacena en servidores o medios magnéticos que mantienen
+                                                    altos estándares de seguridad y
+                                                    protección tanto física como tecnológica.</p>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        
+                                    </div>
+                                    </div>
+                                </div>
+                                </div>
+                                                        
+                        </span>
+                    </div>
+
+                </form>
+
+                <!--- Login con redes sociales-->
+                <div class="container w-100 my-5">
+                    <div class="row text-center">
+                        <div class="col-12"> </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        
+                            <div class="row align-items-center">
+                                <div class="col-2 d-none d-md-block ">
+                                    <img src="img/facebook.png" width="32" alt="">
+                                </div>
+                                <div class="col-12 col-md-10 text-center">
+                                    
+                                </div>
+                            </div>
+                        </button>
+                    </div>
+                    <div class="col">
+                        <button class="btn ">
+                            <div class="row align-items-center">
+                                <div class="col-2 d-none d-md-block">
+                                    <img src="img/google.png" width="32" alt="">
+                                </div>
+                                <div class="col-12 col-md-10 text-center">
+                                    
+                                </div>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+    
+{% endblock %}

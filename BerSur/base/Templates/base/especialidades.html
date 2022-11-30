@@ -1,0 +1,10 @@
+{% extends 'base/main.html' %} {% block content %}
+
+<ul>
+    {% for especialidad in especialidades %}
+    <li>{{ especialidad }}</li>
+    <button><a href="{% url 'eliminar-especialidad' especialidad.id %}">Eliminar</a></button>
+    <button><a href="{% url 'editar-especialidad' especialidad.id %}">Editar</a></button> {% endfor %}
+</ul>
+
+{% endblock %}

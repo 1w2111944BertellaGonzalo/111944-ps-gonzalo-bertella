@@ -1,0 +1,58 @@
+{% extends 'base/main.html' %} {% block content %}
+{% include 'base/navbar.html' %}
+
+
+<div class="container" style="margin-top:70px;">
+    <div class="row">
+        <div class="col-lg-2 col-md-8"></div>
+        <div class="col-lg-4 col-md-8">
+            <a class="btn boton" href="{% url 'horarios' empleado.id%}">Consultar Horarios</a>
+        </div>
+        <div  class="col-lg-4 col-md-8">
+            {% for local in locales %}    
+                <a class="btn boton " href="{% url 'agregar-retiro'%}?local={{local}}" >Registrar Retiro en {{local}}</a>
+            {% endfor %}      
+        </div>
+        <div class="col-lg-2 col-md-8"></div>
+    </div>
+    {% if page == 'cajero' %}
+    <div class="container">
+        <h2 class="text-center" style="margin-top:30px ;">Retiros</h2>
+     </div>
+    </div>
+    <div class="container" id="Section2" style="padding-top: 30px;">
+            <table id="tabla_retiros" class="table table-bordered table-dark">
+                <thead>
+                    <tr >
+                        <th scope="col">#</th>
+                        <th scope="col">Fecha</th>
+                        <th scope="col">Hora</th>
+                        <th scope="col">Monto</th>
+                        <th scope="col">Local</th>
+                        <th scope="col">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for retiro in retiros %}
+                    <tr>
+                        <th scope="row" id="{{ pago.id }}"></th>
+                        <td{% if retiro.cancelado %} style="color: red;" {% endif %}>{{ retiro.fecha|date:"d/m/y" }}
+                        </td>
+                        <td>{{retiro.fecha|time:"H:i:s" }}</td>
+                        <td>${{retiro.monto }}</td>
+                        <td>{{retiro.local }}</td>
+                        <td><button type="button" class="btn btn-light"><a href="{% url 'cancelar-retiro' retiro.id %}">Cancelar</a></button> {% endfor %}</td>
+                    </tr>
+                </tbody>
+            </table>
+    </div>
+</div>
+
+
+<footer>
+        <a  class="btn btn-light"><a href="{% url 'about' %}">Terminos y Condiciones</a>
+</footer>
+
+{% endif %}
+
+{% endblock %}

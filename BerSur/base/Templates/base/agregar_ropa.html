@@ -1,0 +1,39 @@
+{% extends 'base/main.html' %} {% block content %}
+
+
+
+
+
+<form method="post">
+  <div class="container">
+    {% csrf_token %} {{ form }}
+    <button> agregar </button>
+    </div>
+</form>
+
+<form method="post">
+    {% csrf_token %} 
+    <div class="container text-center mt-5">
+            <form>
+                <div class="row py-3">
+                    <div class="col-6">
+                        <input id="txtDescripcion" class="form-control" type="text" placeholder="Descripción">
+                    </div>
+                    <div class="col-6">
+                        <input id="txtTalle" class="form-control" type="text" placeholder="Talle">
+                    </div>
+                </div>
+                <div class="row ">
+                    <div class="col-12 py-3">
+                        <button class="btn btn-block btn-secondary" id="btnAgregar"> Agregar Ropa</button>
+                    </div>
+                </div>
+            </form>
+    </div>
+</form>
+
+
+
+
+
+{% endblock %}

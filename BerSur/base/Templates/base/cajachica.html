@@ -1,0 +1,10 @@
+{% extends 'base/main.html' %} {% block content %}
+
+<ul>
+    {% for Cajachica in Cajachicas %}
+    <li>{{ Cajachica }}</li>
+    <button><a href="{% url 'eliminarcajachica' Cajachica.id %}">Eliminar</a></button>
+    <button><a href="{% url 'editarcajachica' Cajachica.id %}">Editar </a></button> {% endfor %}
+</ul>
+
+{% endblock %}

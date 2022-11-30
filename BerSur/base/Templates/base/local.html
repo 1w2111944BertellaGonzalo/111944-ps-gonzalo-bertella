@@ -1,0 +1,202 @@
+{% extends 'base/main.html' %} {% block content %}
+{% include 'base/navbar.html' %}
+
+<div class="container " >
+    <div style="margin-top:90px;">
+    <div class="row mt-5"  >
+            
+            <div class="col-lg-3 col-md-3">
+                 <a class="btn boton2" href="{% url 'empleados' %}?local={{local.nombre}}">Empleados </a>
+            </div>
+            <div class="col-lg-3 col-md-3">
+                 <a class="btn boton2" href="{% url 'proveedores' local.id %}">Proveedores </a>
+            </div>
+             <div class="col-lg-3 col-md-3">
+                 <a class="btn boton2" href="{% url 'productos' %}">Productos </a>
+            </div>
+             <div class="col-lg-3 col-md-3">
+                 <a class="btn boton2" href="{% url 'agregar-sueldo' local.id %}">Sueldos Semanales </a>
+            </div>
+            
+            
+    </div>
+    </div>
+</div>
+
+<div class="container mt-3">
+    <div class="row">
+    <div class="col-lg-4 col-md-4"></div>
+    <div class="col-lg-4 col-md-4" id="Section2">
+        <h3 class=" mt-2">Caja Chica Semanal</h3>
+            <table class="table rounded table-dark">
+                <thead >
+                    <tr>
+                            
+                    </tr>
+                    </thead>
+            <tbody>
+                <tr>
+                <td class="col-3">Monto inicial: ${{monto_inicial}}</td>
+                {% if rol == 'Presidente' %}
+                <td class="col-3"><a class="btn btn-light" data-toggle="modal" data-target="#modal_caja_chica"><i class="fa-regular fa-pen-to-square"></i></a></td>
+                {% endif %}
+                <td class="col-3">Monto actual: ${{monto_actual}}</td>
+                </tr>
+            </tbody>
+            </table>
+    </div>
+    <div class="col-lg-4 col-md-4"></div>
+    </div>
+</div>
+
+
+<div class="container" id="Section2" style="margin-top:20px">
+                <div class="row mt-1">
+                    <div class="col">
+                        <div class="row ">
+                           <div class="col-lg-5 col-md-8 ">
+                               <h2 >Pagos/gastos</h2>
+                            </div>
+                            <div class="col-lg-5 col-md-8 ">
+                            </div>
+                            <div class="col-lg-2 col-md-8 ">
+                                <a class="btn boton" href="{% url 'agregar-pago'%}?local={{local.nombre}}" >Registrar Pago</a>
+                            </div>
+                        </div>
+
+                        <table id="tabla_pagos" class="table rounded table-bordered table-dark">
+                            <thead >
+                                <tr>
+                                    <th scope="col"></th>
+                                    <th scope="col" >Fecha</th>
+                                    <th scope="col">Proveedor</th>
+                                    <th scope="col">Monto</th>
+                                    <th scope="col">Local</th>
+                                    <th scope="col">Tipo Pago</th>
+                                    <th scope="col">Descripcion</th>
+                                    <th scope="col">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for pago in pagos %}
+                                <tr>
+                                    <th scope="row" id="{{ pago.id }}"></th>
+                                    <td>{{ pago.fecha|date:"d/m/y" }}</td>
+                                    <td>{{ pago.proveedor }}</td>
+                                    <td>${{ pago.monto }}</td>
+                                    <td>{{ empleado.usuario.mail }}</td>
+                                    <td>{{ pago.tipo_pago }}</td>
+                                    <td>{{ pago.descripcion }}</td>
+                                    <td><a class="btn btn-outline-danger" href="{% url 'eliminar-pago' pago.id %}"><i class="fa-solid fa-trash-can"></i></a>
+                                        <a class="btn btn-light" href="{% url 'editar-pago' pago.id %}"><i class="fa-regular fa-pen-to-square"></i></a>{% endfor %}</td>
+                                </tr>
+                            
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+
+
+        <div class="container" id="Section2">
+                        <div class="row mt-2">
+                            <div class="col">
+                                <div class="row ">
+                                    <div class="col-lg-5 col-md-8 ">
+                                        <h2 >Retiros</h2>
+                                    </div>
+                                    <div class="col-lg-5 col-md-8 ">
+                                    </div>
+                                    <div class="col-lg-2 col-md-8 ">
+                                        <!--<a class="btn btn-outline-success my-2 my-sm-0" href="{% url 'agregar-retiro'%}?local={{local.nombre}}" >Registrar Retiro</a> -->
+                                    </div>
+                                </div>
+
+                                <table id="tabla_retiros" class="table rounded table-bordered table-striped table-dark">
+                                    <thead>
+                                        <tr >
+                                            <th scope="col"></th>
+                                            <th scope="col">Fecha</th>
+                                            <th scope="col">Hora</th>
+                                            <th scope="col">Monto</th>
+                                            <th scope="col">Cajero</th>
+                                            <th scope="col">Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for retiro in retiros %}
+                                        <tr>
+                                            <th scope="row" id="{{ pago.id }}"></th>
+                                            <td{% if retiro.cancelado %} style="color: red;" {% endif %}>{{ retiro.fecha|date:"d/m/y" }}
+                                            </td>
+                                            <td>{{retiro.fecha|time:"H:i:s" }}</td>
+                                            <td>${{retiro.monto }}</td>
+                                            <td>{{retiro.cajero }}</td>
+                                            <td><button type="button" class="btn btn-light"><a href="{% url 'cancelar-retiro' retiro.id %}">Cancelar</a></button> {% endfor %}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                {% if rol == 'Presidente' %}
+                                <h3 class="text-aling">Total de hoy: {{ total_retiros_hoy }}</h3>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+<div class="modal" id="modal_caja_chica" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Editar Caja Chica</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form action="" method="POST">
+        {% csrf_token %}
+            <div class="modal-body">
+                <label for="monto">Monto</label>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">$</span>
+                    </div>
+                    <input id="monto" name="monto" class="form-control" type="number">
+                </div>            
+            </div>
+            <div class="modal-footer">
+            <a type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</a>
+            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+        </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block script %}
+<script>
+    // https://datatables.net/reference/option/dom
+    // Initialising DataTables
+    $(document).ready(function() {
+        $('#tabla_retiros').DataTable({
+            'dom': "<'row'<'col-sm-12 col-md-6 col-sm-12 text-left'l><'col-sm-12 col-md-6 col-sm-12'f>>" +
+                "<'table table-bordered table-responsive table-sm table-dark't>" +
+                "<'row'<'col-sm-12 col-md-6 col-sm-12 text-left'i><'col-sm-12 col-md-6 col-sm-12'p>>"
+        });
+    });
+
+     $(document).ready(function() {
+        $('#tabla_pagos').DataTable({
+            'dom': "<'row'<'col-sm-12 col-md-6 col-sm-12 text-left'l><'col-sm-12 col-md-6 col-sm-12'f>>" +
+                "<'table table-bordered table-responsive table-sm table-dark't>" +
+                "<'row'<'col-sm-12 col-md-6 col-sm-12 text-left'i><'col-sm-12 col-md-6 col-sm-12'p>>"
+        });
+    });
+</script>
+
+
+{% endblock script %}

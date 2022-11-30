@@ -1,0 +1,62 @@
+{% extends 'base/main.html' %} {% block content %}
+{% include 'base/navbar.html' %}
+
+
+<div class="container text-center mt-5"  >
+<h2 style="margin-top: 80px;">Editando datos del empleado: {{empleado.usuario.nombre}} {{empleado.usuario.apellido}}</h4>
+    <form class="form-group" method="post" id="Section1">
+        {% csrf_token %}
+        <div class="row py-3">
+            <div class="col-6">
+                <div class="form-group">
+                    {{form_empleado.especialidad}}
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    {{form_empleado.ropa}}
+                </div>
+            </div>
+        </div>
+        <div class="row py-3">
+            <div class="col-6">
+                {{form_usuario.nombre}}
+            </div>
+            <div class="col-6">
+                {{form_usuario.apellido}}
+            </div>
+        </div>
+        <div class="row py-3">
+            <div class="col-6">
+                {{form_usuario.direccion}}
+            </div>
+            <div class="col-6">
+                {{form_usuario.telefono}}
+            </div>
+        </div>
+        <div class="row py-3">
+            <div class="col-3">
+            </div>
+
+            <div class="col-6">
+                <label for="lista_locales">Locales</label>
+                <p>Este emplado se encuentra registrado en: {% for local in empleado.local_set.all %} <b>{{local}}</b> {% endfor %}</p>
+                <select id="lista_locales" name="lista_locales" class="form-select form-control" required multiple aria-label="multiple select example">
+                        <option disabled value=0>Seleccione</option>
+                        {% for local in locales %}
+                        <option value="{{local.id}}">{{local}}</option>                
+                        {% endfor %}
+                    </select>
+            </div>
+            <div class="col-3">
+            </div>
+        </div>
+        <div class="row py-3">
+            <button class="btn btn-secondary btn-block"> Editar </button>
+        </div>
+
+
+    </form>
+</div>
+
+{% endblock %}

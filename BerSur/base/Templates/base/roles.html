@@ -1,0 +1,34 @@
+{% extends 'base/main.html' %} {% block content %}
+
+<div class="container">
+    {% for rol in roles %}
+    <li>{{ rol }}</li>
+    <button><a href="{% url 'eliminar-rol' rol.id %}">Eliminar</a></button> {% endfor %}
+</div>
+
+<table class="table">
+  <thead class="thead-dark">
+    <tr>
+    <td>ROL</td>
+    <td>Acciones</td>
+    
+    
+      
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+    
+      {% for rol in roles %}
+      <td>{{ rol }}</td>
+      <td><button><a href="{% url 'eliminar-rol' rol.id %}">Eliminar</a></button> {% endfor %}</td>
+    </tr>
+    
+  </tbody>
+</table>
+
+
+
+
+
+{% endblock %}

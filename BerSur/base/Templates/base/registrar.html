@@ -1,0 +1,116 @@
+{% extends 'base/main.html' %} {% block content %}
+{% include 'base/navbar2.html' %}
+
+<div class="container" style="margin-top: 10px ;">
+    <form  method="post" class="container" id="Section1" style="padding-top: 10px ; margin-top: 100px;">
+    {% csrf_token %} 
+        <h1 class="text-center">Registrar {{rol.descripcion}}</h1>
+            <form id="Section1">
+                <div class="row py-3">
+                        <div class="col-lg-4 col-md-4">
+                            <input class="form-control mr-sm-2" type="text" name="username" placeholder="Nombre Usuario" aria-label="Nombre Usuario">
+                        </div>
+                            <div class="col-lg-4 col-md-4">
+                            <input class="form-control mr-sm-2" type="text" name="nombre" placeholder="Nombre" aria-label="Nombre">
+                        </div>
+                    
+                        <div class="col-lg-4 col-md-4">
+                            <input class="form-control mr-sm-2" type="text" name="apellido" placeholder="Apellido" aria-label="Apellido">
+                        </div>
+                </div>
+                <div class="row py-3">
+                        <div class="col-lg-6 col-md-6">
+                            <input class="form-control mr-sm-2" type="password" autocomplete="new-password" name="password1" placeholder="Contraseña" aria-label="Contreaseña">
+                        </div>
+                        <div class="col-lg-6 col-md-6">
+                            <input class="form-control mr-sm-2" type="password" autocomplete="new-password" name="password2" placeholder="Confirmar contraseña" aria-label="Confirmar contreaseña">
+                        </div>
+                </div>
+                <div class="row py-3">
+                        <div class="col-lg-6 col-md-6">
+                            <input class="form-control mr-sm-2" type="text" name="mail" placeholder="Email" aria-label="Email">
+                        </div>
+                        <div class="col-lg-6 col-md-6">
+                            <input class="form-control mr-sm-2" type="text" name="direccion" placeholder="Dirección" aria-label="Dirección">
+                        </div>
+                </div>
+                <div class="row py-3">
+                        <div class="col-lg-6 col-md-6">                    
+                            <input class="form-control mr-sm-2" type="text" name="telefono" placeholder="Teléfono" aria-label="Teléfono">
+                        </div>
+                        <div class="col-lg-6 col-md-6">
+                            <input class="form-control mr-sm-2" type="text" name="fecha_nacimiento" placeholder="Fecha de Nacimiento" aria-label="Fecha de Nacimiento">
+                        </div>
+                </div>
+                <div class="row py-3">
+                        <div class="col-lg-6 col-md-6">
+                            <input class="form-control mr-sm-2" type="text" name="dni" placeholder="DNI" aria-label="DNI">
+                        </div>
+                        {% if rol.descripcion != 'Gerente' %}
+                        <div class="col-lg-6 col-md-6 form-group text-left">
+                            <label for="lista_locales">Locales</label>
+                            <select id="lista_locales" name="lista_locales" class="form-select form-control" required {% if rol.descripcion == 'Empleado' %} multiple {% endif %} aria-label="multiple select example">
+                                <option disabled value=0>Seleccione</option>
+                            {% for local in locales %}
+                                <option val="{{local.id}}">{{local}}</option>                
+                            {% endfor %}
+                            </select>
+                        </div>
+                        {% endif %}
+                </div>
+                {% if rol.descripcion == 'Empleado' %}
+                <div class="row py-3">
+                        <div class="col-lg-6 col-md-6">
+                            <label for="sueldo_por_hora">Sueldo por hora</label>
+                            <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">$</span>
+                            </div>
+                            <input id="sueldo_por_hora" name="sueldo_por_hora" class="form-control" type="number">
+                        </div>     
+                        </div>
+                </div>
+                {% endif %}
+                <div class="row py-3">
+                        <div class="col-lg-6 col-md-6">
+                            {% if form_empleado %}
+                                <div class="form-group">
+                                    <label for="especialidad">Especialidad</label>
+                                    <select required class="form-control" name="especialidad" id="especialidad">
+                                        <option disabled value=0>Seleccione</option>
+                                        {% for especialidad in especialidades %}
+                                        <option value="{{especialidad.id}}">{{especialidad}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                </div>
+                <div class="col-lg-6 col-md-6">
+                            <div class="form-group">
+                                <label for="ropa">Ropa</label>
+                                <select required class="form-control" name="ropa" id="ropa">
+                                    <option disabled value=0>Seleccione</option>
+                                    {% for ropa in ropas %}
+                                    <option value="{{ropa.id}}">{{ropa}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            {% endif %}
+                </div>
+                <div class="row ">
+                    <div class="col-12 ">
+                        {% if form_usuario.errors %}
+                                <div class="alert alert-danger">
+                                    {% for field in form_usuario %}
+                                        {% for error in field.errors %}
+                                            {{error}}
+                                        {% endfor %}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                    </div>
+                </div>
+                <button class="btn btn-block  boton" id="btnAgregar"> Registrar Empleado</button>
+            </form>
+    </form>
+ </div>
+{% endblock %}

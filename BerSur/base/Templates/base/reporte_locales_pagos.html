@@ -1,0 +1,205 @@
+{% extends 'base/main.html' %}{% block content %} {% load static %} {% include 'base/navbar.html' %}
+
+<div class="container-fluid">
+  <h1 class="text-center" style="margin-top: 100px">
+    Reporte semanal de Pagos a Proveedores
+  </h1>
+  <div class="row mt-3">
+    <div class="col-2"></div>
+    <div class="col-8">
+      <div class="row">
+        <div class="col-3">
+          <label for="lista_years">Año</label>
+          <select
+            id="lista_years"
+            name="lista_years"
+            class="form-select form-control"
+            required
+            aria-label="multiple select example"
+          >
+            <option disabled value="0">Seleccione</option>
+            {% for year in local_years %}
+            <option value="{{year}}">{{year}}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-3">
+          <label for="lista_meses">Mes</label>
+          <select
+            id="lista_meses"
+            name="lista_meses"
+            class="form-select form-control"
+            required
+            aria-label="multiple select example"
+          >
+            <option disabled value="0">Seleccione</option>
+            {% for mes in local_meses %}
+            <option value="{{mes}}">{{mes}}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-3"></div>
+        <div class="col-3">
+          <button
+            class="btn btn-light text-left"
+            onclick="actualizarFiltroPagos()"
+          >
+            Filtrar
+          </button>
+        </div>
+        <div class="col-3">
+        <form action="" method="POST">
+            {% csrf_token %}
+            <input hidden id="chartExport" name="chartExport">
+            <input hidden id="labelsExport" name="labelsExport">
+            <button class="btn btn-light" type="submit">Exportar como CSV</button>
+          </form>
+        </div>
+      </div>
+      <div class="row">
+        <div
+          class="chart-area"
+          style="
+            width: 100%;
+            padding-top: 10px;
+            padding-bottom: 20px;
+            background: linear-gradient(
+              rgba(200, 130, 20, 0.1),
+              rgba(192, 67, 32, 0.7)
+            );
+          "
+          id="Section1"
+        >
+          <canvas id="chartPagos"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="col-2"></div>
+  </div>
+</div>
+
+{% endblock %} {% block script %}
+
+<script>
+
+
+  const ctx = document.getElementById('chartPagos');
+  const pagos_por_local = {{pagos_por_local|safe}}
+  const chart_labels = {{inicios_de_semana|safe}}
+
+  var chartExport = document.getElementById("chartExport")
+  chartExport.value = JSON.stringify(pagos_por_local)
+  var labelsExport = document.getElementById("labelsExport")
+  labelsExport.value = JSON.stringify(chart_labels)
+
+  let labels = chart_labels
+  let data = []
+
+  datasets = []
+  var dataObject = {}
+  for ([local_id, {nombre, montos}] of Object.entries(pagos_por_local)){
+    dataObject = {
+      label: nombre,
+      data: montos,
+    }
+    datasets.push(dataObject)
+  }
+
+  pagosChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: chart_labels,
+        datasets: datasets
+    },
+    plugins: [ChartDataLabels],
+    options: {
+      maintainAspectRatio: false,
+      responsive: true,
+      scales: {
+        x: {
+        stacked: true,
+        },
+        y: {
+          stacked: true,
+          beginAtZero: true
+        }
+      },
+    interaction: {
+        intersect: false,
+    },
+      plugins: {
+      datalabels: {
+        anchor:'end',
+        align: 'top',
+        formatter: (value, ctx) => {
+          const datasetArray = [];
+          ctx.chart.data.datasets.forEach((dataset) => {
+            console.log(datasets)
+            if(dataset.data[ctx.dataIndex] != undefined && dataset.data[ctx.dataIndex] != 'null' ) {
+              datasetArray.push(dataset.data[ctx.dataIndex])
+            }
+          });
+          function totalSum(total, datapoint) {
+            return total + datapoint;
+          }
+          let sum = datasetArray.reduce(totalSum, 0)
+
+          if(ctx.datasetIndex === datasetArray.length - 1){
+            return '$' + sum;
+
+          }
+          else {
+            return '';
+          }
+
+        }
+      }
+    },
+    }
+  });
+</script>
+
+<script>
+
+
+
+  lista_years = document.getElementById('lista_years')
+  lista_meses = document.getElementById('lista_meses')
+  function actualizarFiltroPagos() {
+      let result
+      try {
+          result = $.ajax({
+          type: 'GET',
+          url: "{% url 'actualizar-reporte-locales-pagos' %}",
+          data: {'year': lista_years.value, 'mes': lista_meses.value, 'local_id': {{local.id}}},
+          success: function (response) {
+            console.log(response.pagos_por_local)
+
+            datasets = []
+            var dataObject = {}
+            for ([local_id, {nombre, montos}] of Object.entries(response.pagos_por_local)){
+              dataObject = {
+                label: nombre,
+                data: montos,
+              }
+              datasets.push(dataObject)
+            }
+
+            pagosChart.data.labels = response.inicios_de_semana
+            pagosChart.data.datasets = datasets
+            pagosChart.update()
+          },
+          error: function (response) {
+            console.log("error")
+            console.log(response)
+        }
+        });
+      }
+      catch (error) {
+        console.error(error)
+        }
+
+  }
+</script>
+
+{% endblock %}

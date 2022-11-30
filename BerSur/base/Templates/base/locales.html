@@ -1,0 +1,9 @@
+{% extends 'base/main.html' %} {% block content %}
+
+<ul>
+    {% for caja in cajas_chicas %} {{caja.local.nombre}} {{caja.local.direccion}} {{caja.local.encargado}} {{caja.monto_semanal}}
+    <button><a href="{% url 'eliminar-local' caja.local.id %}">Eliminar</a></button>
+    <button><a href="{% url 'editar-local' caja.local.id %}">Editar</a></button> {% endfor %}
+</ul>
+
+{% endblock %}

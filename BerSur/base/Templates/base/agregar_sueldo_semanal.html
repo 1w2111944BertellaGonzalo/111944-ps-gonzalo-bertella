@@ -1,0 +1,152 @@
+{% extends 'base/main.html' %} {% block content %}
+{% include 'base/navbar.html' %}
+
+<div style="margin-top:100px;"></div>
+<div class="container text-center mt-5" style=" font-size: 10px; max-width: 130em; padding-top:20px; " id="Section1">
+    <h1>Sueldos Semanales</h1>
+    <table id="tabla_sueldos">
+        <thead class="thead-light">
+            <tr>
+                <th class="text-center" rowspan="2">Nombre y apellido</th>
+                <th class="text-center" rowspan="2">DNI</th>
+                {% for dia in dias_laborables %}
+                <th class="text-center" colspan="3">{{dia}}</th>
+                {% endfor %}
+
+                <th class="text-center" rowspan="2">Total horas semanal</th>
+                <th class="text-center" rowspan="2">Total a cobrar</th>
+                <th class="text-center" rowspan="2">Editar</th>
+
+            </tr>
+            <tr>
+                {% for dia in dias_laborables %}
+                <th>Hora ingreso</th>
+                <th>Hora salida</th>
+                <th>Total de horas</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for empleado_id, datos in sueldos_por_empleado.items %}
+            <tr>
+                <td>{{ datos.nombre }} {{ datos.apellido }}</td>
+                <td>{{ datos.dni }}</td>
+                {% for dia, horas in datos.horarios.items %} {% if horas.0 == 'null' %}
+                <td> -- </td>
+                <td> -- </td>
+                <td> -- </td>
+                {% else %}
+                <td>{{horas.0}}</td>
+                <td>{{horas.1}}</td>
+                <td>{{horas.2}}</td>
+                {% endif %} {% endfor %}
+                {% if datos.total_horas == 'null' %}
+                <td> -- </td>
+                {% else %}
+                <td>{{ datos.total_horas }}</td>
+                {% endif %}
+                {% if datos.total_horas == 'null' %}
+                <td> -- </td>
+                {% else %}
+                <td>${{ datos.total_a_cobrar }}</td>
+                {% endif %}
+                <td><button class="btn btn-light" onclick="abrirModalEmpleado({{empleado_id}})"><i class="fa-regular fa-pen-to-square"></i></button></td>
+            </tr>
+            {% endfor %}
+
+        </tbody>
+    </table>
+</div>
+
+
+
+<div class="modal" id="modal_agregar_sueldo" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Editar Sueldo Semanal</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form action="" method="POST">
+        {% csrf_token %}
+            <input id="empleado_id" name="empleado_id" hidden>
+            <div class="modal-body">
+            {% for dia in dias_laborables %}
+            <div class="row">
+                <label for="">{{dia}}</label>
+                <div class="row">
+                    <div class="col-md-6">
+                        <input id="ingreso_{{dia}}" name="ingreso_{{dia}}" class="form-control mr-sm-2" type="text">
+                    </div>
+                    <div class="col-md-6">
+                        <input id="salida_{{dia}}" name="salida_{{dia}}" class="form-control mr-sm-2" type="text">
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+            </div>
+            <div class="modal-footer">
+            <a type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</a>
+            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+        </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block script %}
+<script>
+    const sueldos_por_empleado = {{sueldos_por_empleado | safe}}
+    
+    function abrirModalEmpleado(id) {
+        for([empleado_id, {nombre, apellido, horarios}] of Object.entries(sueldos_por_empleado)) {
+            if (id==empleado_id) {
+
+                var modal = $('#modal_agregar_sueldo')
+                    
+                    modal.find('.modal-title').text('Editar Sueldo Semanal de ' + nombre + ' ' + apellido )
+                    
+                    {% for dia in dias_laborables %}
+                    if (horarios['{{dia}}'][0] == 'null'){
+                        modal.find('.modal-body input#ingreso_{{dia}}').val('--')
+                        modal.find('.modal-body input#salida_{{dia}}').val('--')
+                    }
+                    else {
+                        modal.find('.modal-body input#ingreso_{{dia}}').val(horarios['{{dia}}'][0])
+                        modal.find('.modal-body input#salida_{{dia}}').val(horarios['{{dia}}'][1])
+                    }
+                    {% endfor %}
+
+                    empleado = document.getElementById('empleado_id')
+                    empleado.value = empleado_id
+
+                    modal.modal('show');
+
+                break
+            }
+        }
+    }
+
+</script>
+
+
+
+
+<script>
+    // https://datatables.net/reference/option/dom
+    // Initialising DataTables
+    $(document).ready(function() {
+        $('#tabla_sueldos').DataTable({
+            'dom': "<'row'<'col-sm-12 col-md-6 col-sm-12 text-left'l><'col-sm-12 col-md-6 col-sm-12'f>>" +
+                "<'table table-bordered table-responsive table-sm table-dark't>" +
+                "<'row'<'col-sm-12 col-md-6 col-sm-12 text-left'i><'col-sm-12 col-md-6 col-sm-12'p>>"
+        });
+    });
+</script>
+
+
+{% endblock script %} 

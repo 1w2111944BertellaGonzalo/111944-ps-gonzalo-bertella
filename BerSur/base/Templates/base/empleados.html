@@ -1,0 +1,303 @@
+{% extends 'base/main.html' %} {% block content %}
+{% include 'base/navbar.html' %}
+
+<div class="container">
+    <h1 style="margin-top: 70px;" class="text-center">Empleados</h1>
+    <div id="Section2" style="color: black;">
+    <div class="row ">
+        <div class="col">
+            <div class="row ">
+                <div class="col-lg-3 col-md-3">
+                {% if local %}
+                 <a class="btn boton" href="{% url 'agregar-horarios' local.id %}" >Registrar Horarios de trabajo</a>
+                 {% endif %}
+                </div>
+                <div class="col-lg-3 col-md-3">
+                 <a class="btn boton" href="{% url 'registrar' 'Empleado' %}" >Registrar Empleado</a>
+                </div>
+                <div class="col-lg-2 col-md-2  ">
+                    <button class="btn boton" data-toggle="modal" data-target="#modal_agregar_especialidad" >Agregar Especialidad</button>
+                </div>
+                <div class="col-lg-2 col-md-2  ">
+                    <button class="btn boton" data-toggle="modal" data-target="#modal_agregar_ropa" >Agregar Ropa</button>
+                </div>
+                <div class="col-lg-2 col-md-2  ">
+                 {% if local %}
+                    <a class="btn boton" href="{% url 'reporte-sueldos' local.id %}" id="btnAgregar"> Reporte de Sueldos</a>
+                    {% endif %}
+                </div>
+
+
+            </div>
+
+            <table id="tabla_empleados" class="table rounded table-bordered table-dark ">
+                <thead>
+                    <tr>
+                        <th scope="col"></th>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Apellido</th>
+                        <th scope="col">Especialidad</th>
+                        <th scope="col">Ropa</th>
+                        <th scope="col">mail</th>
+                        <th scope="col">Dirección</th>
+                        <th scope="col">Teléfono</th>
+                        <th scope="col">Fecha Nacimiento</th>
+                        {%if not local%}
+                        <th scope="col">Locales</th>
+                        {% endif %}
+                        <th scope="col">Acciones</th>
+                        <th scope="col">Horarios</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for empleado_id, datos in horarios_por_empleado.items %}
+                    <tr>
+                        <th scope="row" id="{{ empleado.id }}"></th>
+                        <td>{{ datos.nombre }}</td>
+                        <td>{{ datos.apellido }}</td>
+                        <td>{{ datos.especialidad }}</td>
+                        <td>{{ datos.ropa }}</td>
+                        <td>{{ datos.mail }}</td>
+                        <td>{{ datos.direccion }}</td>
+                        <td>{{ datos.telefono }}</td>
+                        <td>{{ datos.fecha_nacimiento }}</td>
+                        {%if not local %}
+                        <td>{% for local in datos.locales %} {{ local }}  {% endfor %}</td>
+                        {% endif %}
+                        <td><a class="btn btn-danger" href="{% url 'eliminar-usuario' datos.usuario_id %}"><i class="fa-solid fa-trash-can"></i></a>
+                            <a class="btn btn-secondary" href="{% url 'editar-empleado' empleado_id %}"><i class="fa-regular fa-pen-to-square"></i> </a>
+                          </td>
+                          <td>
+                            <a class="btn btn-outline-secondary mt-1 col-12" href="{% url 'reporte-horarios-trabajados' empleado_id %}"><i class="fa-solid fa-chart-simple"></i></a>
+                          </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    </div>
+</div>
+
+
+
+
+<div class="modal" tabindex="-1" role="dialog" id="modal_agregar_especialidad">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Especialidades</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <label for="especialidad">Agregar Especialidad</label>
+        <input type="text" class="form-control" name="especialidad" id="especialidad">
+        <div id="lista_especialidades">
+          {% for especialidad in especialidades %}
+          <p>{{especialidad}}</p>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" onclick="actualizarEspecialidades()" class="btn btn-primary">Agregar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal" tabindex="-1" role="dialog" id="modal_agregar_ropa">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Ropas</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <label for="ropa">Agregar Ropa</label>
+        <input type="text" class="form-control" name="ropa" id="ropa">
+        <div id="lista_ropas">
+          {% for ropa in ropas %}
+          <p>{{ropa}}</p>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" onclick="actualizarRopas()" class="btn btn-primary">Agregar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{% if local %}
+<div class="modal" id="modal_agregar_horarios" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Registrar Horarios de</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form action="" method="POST">
+        {% csrf_token %}
+            <input id="empleado_id" name="empleado_id" hidden>            
+            <input id="local_id" name="local_id" value="{{local.id}}" hidden>
+            <div class="modal-body">
+            {% for dia in dias_laborables %}
+            <div class="row">
+                <label for="">{{dia}}</label>
+                <div class="row">
+                    <div class="col-md-6">
+                        <input id="ingreso_{{dia}}" name="ingreso_{{dia}}" class="form-control mr-sm-2" type="text">
+                    </div>
+                    <div class="col-md-6">
+                        <input id="salida_{{dia}}" name="salida_{{dia}}" class="form-control mr-sm-2" type="text">
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+            </div>
+            <div class="modal-footer">
+            <a type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</a>
+            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+        </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endif %}
+{% endblock %}
+
+
+
+{% block script %}
+<script>
+    // https://datatables.net/reference/option/dom
+    // Initialising DataTables
+    $(document).ready(function() {
+        $('#tabla_empleados').DataTable({
+            'dom': "<'row'<'col-sm-12 col-md-6 col-sm-12 text-left'l><'col-sm-12 col-md-6 col-sm-12'f>>" +
+                "<'table table-bordered table-responsive table-sm table-dark't>" +
+                "<'row'<'col-sm-12 col-md-6 col-sm-12 text-left'i><'col-sm-12 col-md-6 col-sm-12'p>>"
+        });
+    });
+</script>
+
+
+<script>
+  var lista_especialidades = document.getElementById('lista_especialidades')
+
+
+  function actualizarEspecialidades() {
+      var especialidad = document.getElementById('especialidad')
+      let result
+      try {
+          result = $.ajax({
+          type: 'GET',
+          url: "{% url 'actualizar-especialidades' %}",
+          data: {'especialidad': especialidad.value},
+          success: function (response) {
+          
+          console.log(response.especialidades)
+          lista_especialidades.innerHTML = ""
+          for (var i in response.especialidades) {
+            lista_especialidades.innerHTML += `<p>${response.especialidades[i]}</p>`
+          }
+          especialidad.innerText = ""
+          },
+          error: function (response) {
+            console.log("error")
+            console.log(response)
+        }
+        });
+      }
+      catch (error) {
+        console.error(error)
+        }
+
+  }
+</script>
+
+
+
+
+<script>
+  var lista_ropas = document.getElementById('lista_ropas')
+
+
+  function actualizarRopas() {
+      var ropa = document.getElementById('ropa')
+      let result
+      try {
+          result = $.ajax({
+          type: 'GET',
+          url: "{% url 'actualizar-ropas' %}",
+          data: {'ropa': ropa.value},
+          success: function (response) {
+          
+          console.log(response.ropas)
+          lista_ropas.innerHTML = ""
+          for (var i in response.ropas) {
+            lista_ropas.innerHTML += `<p>${response.ropas[i]}</p>`
+          }
+          ropa.innerText = ""
+          },
+          error: function (response) {
+            console.log("error")
+            console.log(response)
+        }
+        });
+      }
+      catch (error) {
+        console.error(error)
+        }
+
+  }
+</script>
+
+<script>
+    const horarios_por_empleado = {{horarios_por_empleado | safe}}
+    
+    function abrirModalHorarios(id) {
+        for([empleado_id, {nombre, apellido, horarios}] of Object.entries(horarios_por_empleado)) {
+            if (id==empleado_id) {
+
+                var modal = $('#modal_agregar_horarios')
+                    
+                    modal.find('.modal-title').text('Registrar Horarios de ' + nombre + ' ' + apellido )
+                    
+                    {% for dia in dias_laborables %}
+                    if (horarios['{{dia}}'][0] == 'null'){
+                        modal.find('.modal-body input#ingreso_{{dia}}').val('--')
+                        modal.find('.modal-body input#salida_{{dia}}').val('--')
+                    }
+                    else {
+                        modal.find('.modal-body input#ingreso_{{dia}}').val(horarios['{{dia}}'][0])
+                        modal.find('.modal-body input#salida_{{dia}}').val(horarios['{{dia}}'][1])
+                    }
+                    {% endfor %}
+
+                    empleado = document.getElementById('empleado_id')
+                    empleado.value = empleado_id
+
+                    modal.modal('show');
+
+                break
+            }
+        }
+    }
+
+</script>
+
+
+{% endblock script %}
+

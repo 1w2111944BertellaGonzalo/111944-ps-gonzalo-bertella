@@ -1,0 +1,10 @@
+{% extends 'base/main.html' %} {% block content %}
+
+<ul>
+    {% for Pagosproveedor in Pagosproveedores %}
+    <li>{{ Pagosproveedor }}</li>
+    <button><a href="{% url 'eliminarpagosproveedor' Pagosproveedor.id %}">Eliminar</a></button>
+    <button><a href="{% url 'editarpagosproveedor' Pagosproveedor.id %}">Editar</a></button> {% endfor %}
+</ul>
+
+{% endblock %}

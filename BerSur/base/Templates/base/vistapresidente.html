@@ -1,0 +1,106 @@
+{% extends 'base/main.html' %}
+{% block content %}
+{% load static %}
+
+    <nav id="menu" class="navbar navbar-expand-lg navbar-light fixed-top bg-prima">
+        <a class="navbar-brand display: flex; justify-content: center;" href="#">
+            <img src="{% static 'images/logonegro.png' %}" width="200" height="50"  >
+            <a class="btn btn-outline-danger my-2 my-sm-0" href="{% url 'logout' %}">Cerrar Sesión</a> 
+        </a>
+
+    </nav>
+    {% for local in locales %}
+    <div class="card text-center  rounded " style="margin-top:100px ">
+        <div class="card-header" style="color: black; background: linear-gradient( rgb(143, 141, 141), rgb(255, 255, 255));">
+            <a title="{{local}}" href=" {% url 'local' local.id %} " ><img src="{% static local.logo.url %}" style="width: 180px " alt=""></a>
+            <br>
+            <div class="row mt-3 ">
+                <div class="shadow p-2  bg-white rounded col-lg-3 col-md-3">Caja chica: ${{local.monto_actual}}</div>
+                <div class="shadow p-2  bg-white rounded col-lg-3 col-md-3">Pagos semanales: ${{local.total_pagos_semana_actual}}</div>
+                <div class="shadow p-2  bg-white rounded col-lg-3 col-md-3">Retiros del dia: ${{local.total_retiros_hoy}}</div>
+                <div class="shadow p-2  bg-white rounded col-lg-3 col-md-3">Sueldos semanales: ${{local.total_sueldos_semana_actual}}</div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+    <div class="container text-center mb-4 mt-5">
+        <div class="btn-group-toggle" data-toggle="buttons">
+            <div class="row">
+               
+                <div class="col-lg-3 col-md-3">
+                <a  href="{% url 'empleados' %}" class="btn btn-secondary boton active">Ver Lista de empleados</a>
+                </div>
+                <div class="col-lg-3 col-md-3">
+                <a  href="{% url 'reporte-locales-pagos' %}" class="btn btn-secondary boton active">Ver Reporte general de pagos a provedores</a>
+                </div>
+                <div class="col-lg-3 col-md-3">
+                <a  href="{% url 'agregar-local' %}" class="btn btn-secondary boton active">Crear Nuevo Local</a>
+                </div>
+                <div class="col-lg-3 col-md-3">
+                    <a  href="{% url 'registrar' 'Encargado' %}" class="btn btn-secondary boton active">Registrar Encargado</a>
+                </div>
+                {% if request.user.rol.descripcion == 'Presidente' %}
+                <div class="col-lg-3 col-md-3">
+                    <a  href="{% url 'registrar' 'Gerente' %}" class="btn btn-secondary boton active">Registrar Gerente</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+<footer>    
+    <div style="background: linear-gradient( rgb(143, 141, 141), rgb(255, 255, 255)); padding: 1em 0; text-align: center;  width: 100%;">
+        
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModalLong">
+        Preguntas Frecuentes
+        </button>
+
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle" >Preguntas Frecuentes</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form>
+                                    <h6>Qué cantidad de Usuarios o Locales pueden crearce ?</h6>
+                                    <p> Esta herramienta no tiene un límite de creación, desde el botón "Listado de Empleados" puede
+                                        acceder a todos los empleados y encargados creados los cuales pueden se pueden editar y eliminar y a su vez crear nuevos,
+                                        asi también como acceder a la especialidad y tipo de ropa.
+                                        Al igual que desde el botón "Crear Local" puede acceder a la creación de un nuevo local 
+                                        en el cual también puede situar una dirección gracias Google Maps.</p>
+                                    <hr>
+                                    <h6>Cómo ingreso a un local?</h6>
+                                    <p> Para acceder a un local debe apretar sobre la imagen del mismo, la cual lo redirecciona al local correspondiente, mostrando toda la información del mismo. </p>
+                                    <hr>
+                                    <h6>Que pasa si no se actualiza la caja chica al finalizar la semana? </h6>
+                                    <p> La caja chica esta programada para que a partir del día Lunes a las 00:00 am actualice su valor automaticamente a $0</p>
+                                    <hr>
+                                    <h6> Cómo cargo los horarios en Google Calendar?</h6>
+                                    <p> Para poder realizar la carga de horarios primero debe completar todos los horarios que desea asignar a cada uno de sus empleados,
+                                        luego de realizada la carga se guardaran los cambios y se creara un evento gracias al boton "Guardar Horarios en el Calendario" el cual enviará
+                                        todos los horarios a cada trabajador, los cuales visualizar en su perfil. </p>
+                                    <hr>
+                                    <h6>Cómo se guardan y calculan los pagos semanales? </h6>
+                                    <p> Ingresando en "Sueldos Semanales" puede visualizar todos los horarios cumplidos por el trabajador en una semana, en el cual se calcula automaticamente su 
+                                    sueldo semanal en base a las horas trabajadas registradas y el sueldo a cobrar por hora de cada empleado. El encargado del local es quien esta autorizado para
+                                    realizar el registro de horas de los empleados a cargo. </p>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+</footer>
+
+
+{% endblock %}

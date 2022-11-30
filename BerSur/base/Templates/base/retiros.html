@@ -1,0 +1,9 @@
+{% extends 'base/main.html' %} {% block content %}
+
+<ul>
+    {% for retiro in retiros %}
+    <li>{{ retiro }}</li>
+    <button><a href="{% url 'editar-retiro' retiro.id %}">Editar</a></button> {% endfor %}
+</ul>
+
+{% endblock %}

@@ -1,0 +1,10 @@
+{% extends 'base/main.html' %} {% block content %}
+
+<ul>
+    {% for ropa in ropas %}
+    <li>{{ ropa }}</li>
+    <button><a href="{% url 'eliminar-ropa' ropa.id %}">Eliminar</a></button>
+    <button><a href="{% url 'editar-ropa' ropa.id %}">Editar</a></button> {% endfor %}
+</ul>
+
+{% endblock %}

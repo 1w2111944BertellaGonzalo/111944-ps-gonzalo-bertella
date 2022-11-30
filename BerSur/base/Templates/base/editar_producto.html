@@ -1,0 +1,50 @@
+{% extends 'base/main.html' %} {% block content %}
+{% include 'base/navbar.html' %}
+
+<div class="container text-center mt-5">
+    <h1>Editar Producto</h1>
+    <div id="Section1">
+    <form method="post">
+        {% csrf_token %}
+        <div class="row py-3">
+            <div class="col-6">
+                <div class="form-group">
+                    {{form_producto.codigo}}
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    {{form_producto.descripcion}}
+                </div>
+            </div>
+        </div>
+        <div class="row py-3">
+            <div class="col-4">
+                {{form_producto.precio_costo}}
+            </div>
+            <div class="col-4">
+                {{form_producto.precio_venta}}
+            </div>
+            <div class="col-4">
+                {{form_producto.precio_mayoreo}}
+            </div>
+        </div>
+        <div class="row py-3">
+            <div class="col-6">
+                {{form_producto.proveedor}}
+            </div>
+        </div>
+        
+        <div class="row py-3">
+            <button class="btn btn-secondary btn-block"> Editar </button>
+        </div>
+
+
+    </form>
+    </div>
+</div>
+
+
+
+
+{% endblock %}

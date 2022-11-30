@@ -1,0 +1,40 @@
+{% extends 'base/main.html' %} {% block content %}
+
+
+
+<div class="container text-center mt-5">
+    <h1>Editar Pago</h1>
+    <div id="Section1">
+<form method="post">
+    {% csrf_token %} 
+    <div class="container">
+     <div class="row py-3">
+            <div class="col-6">
+                <div class="form-group">
+                    {{form.proveedor}}
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    {{form.monto}}
+                </div>
+            </div>
+        </div>
+        <div class="row py-3">
+            <div class="col-6">
+                {{form.descripcion}}
+            </div>
+            <div class="col-6">
+                {{form.tipo_pago}}
+            </div>
+        </div>
+
+
+
+        <div class="row py-3">
+            <button class="btn btn-secondary btn-block"> Editar </button>
+        </div>
+</form>
+ </div>
+  </div>
+{% endblock %}

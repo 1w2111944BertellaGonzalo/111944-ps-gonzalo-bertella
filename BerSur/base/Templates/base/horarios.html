@@ -1,0 +1,14 @@
+{% extends 'base/main.html' %} {% block content %}
+{% include 'base/navbar.html' %}
+
+<div class="container pb-2"> 
+<h1 class="text-center " style="margin-top: 70px; "> Calendario de Trabajo </h1>
+    <div  class="container" id="Section2" style="width:77%">
+        {% for local, url in urls_calendarios.items %}
+            <h3>{{local}}</h3>
+            <iframe src="{{url}}" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>
+
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
